@@ -13,3 +13,10 @@ Pin connections:
 * Neopixel GND -> Arduino GND
 * Neopixel vcc -> Arduino 5v
 * Neopixel Data in -> Arduino Pin D7
+
+
+ToDOs/Roadmap
+-------------
+* update LED_layout to support the 16 pixel configuration
+* add attiny85 support
+* better documentation, circuit diagram
