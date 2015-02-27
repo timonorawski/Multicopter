@@ -6,6 +6,7 @@
  by Alexander Dubus
  adapted by Shikra
 
+
  For all documenation and files:
  http://code.google.com/p/ledring/
 
@@ -38,7 +39,7 @@
 /* The LED board type *///Choose only 1
 //#define LEDBOARDv2 - untested
 //#define LEDBOARDv3
-#define ADAFRUITNEOPIXELRING // Adafruit neopixel ring on arduino
+#define ADAFRUITNEOPIXELRING // Adafruit NeoPixel ring on arduino
 
 /* LED board inverted - uncomment to reverse MAG direction*///
 //#define reverse_mag
@@ -531,8 +532,9 @@ void turnover(uint8_t rgb,uint8_t dir){
 }
 
 void set_led_rgb (uint8_t led, uint8_t red, uint8_t green, uint8_t blue){
-        Serial.println("set_led_rgb");
-
+#if defined(DEBUG)
+  Serial.println("set_led_rgb");
+#endif
   if (led>NUMLEDS-1) return;
   if (red>63) red = 63; brightness[0][led] = red;
   if (green>63) green = 63; brightness[1][led] = green;
@@ -541,16 +543,6 @@ void set_led_rgb (uint8_t led, uint8_t red, uint8_t green, uint8_t blue){
   ring.setPixelColor(led, red,green,blue);
 #endif
 }
-/*
-void set_led_rgb (uint8_t led, uint8_t red, uint8_t green, uint8_t blue){
-  if (led>NUMLEDS-1) return;
-  if (red>63) red = 63;
-  brightness[0][led] = red;
-  if (green>63) green = 63;
-  brightness[1][led] = green;
-  if (blue>63) blue = 63;
-  brightness[2][led] = blue;
-}*/
 
 void set_all_rgb (uint8_t red, uint8_t green, uint8_t blue) {
   uint8_t led;
