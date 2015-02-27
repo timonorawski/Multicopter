@@ -36,6 +36,9 @@
 //#define MultiWii_I2C_v1 // - to use standard Multiwii 2.0/2.1 LED functionality.
 #define Standalone              // - runs standalone using stitches to determine flashe sequences
 
+
+//#define DEBUG
+
 /* The LED board type *///Choose only 1
 //#define LEDBOARDv2 - untested
 //#define LEDBOARDv3
@@ -345,44 +348,53 @@ void I2C_standard_mode(){
       for(i=0;i<3;i++) {
         for (bright = 0;bright<64;bright+=1) {
           set_all_rgb(bright, 0, 0);
+          SHOWLEDS();
           delay(5);
         }
         for (bright = 0;bright<64;bright+=1) {
           set_all_rgb(63-bright, 0, 0);
+          SHOWLEDS();
           delay(5);
         }
       }
       for(i=0;i<3;i++) {
         for (bright = 0;bright<64;bright+=1) {
           set_all_rgb(0, bright, 0);
+          SHOWLEDS();
           delay(5);
         }
         for (bright = 0;bright<64;bright+=1) {
           set_all_rgb(0,63-bright, 0);
+          SHOWLEDS();
           delay(5);
         }
       }
       for(i=0;i<3;i++) {
         for (bright = 0;bright<64;bright+=1) {
           set_all_rgb(0,0,bright);
+          SHOWLEDS();
           delay(5);
         }
         for (bright = 0;bright<64;bright+=1) {
           set_all_rgb(0,0,63-bright);
+          SHOWLEDS();
           delay(5);
         }
       }
       set_all_rgb(0,0,0);
+      SHOWLEDS();
       break;
     case 'j': // one effect
       set_led_rgb(2, 20,0, 0);
       set_led_rgb(3, 63,0, 0);
       set_led_rgb(1, 0,10, 0);
       set_led_rgb(0, 0,0,30);
+      SHOWLEDS();
       for (i = 0; i < 100; i++) {
         turnover(0,2);
         turnover(1,1);
         turnover(2,2);
+        SHOWLEDS()
         delay(90);
       }
       break;
@@ -390,8 +402,10 @@ void I2C_standard_mode(){
       set_all_rgb(0,0,0);
       for(i=0;i<param[1];i++) {
         set_all_rgb(63,63,63);
+        SHOWLEDS();
         delay(param[2]);
         set_all_rgb(0,0,0);
+        SHOWLEDS();
         delay(param[2]);
       }
       set_all_rgb(0,0,0);
@@ -424,6 +438,7 @@ void I2C_standard_mode(){
     }
   }
   param[0]=0;
+  SHOWLEDS();
 }
 #endif
 
@@ -519,15 +534,27 @@ void turnover(uint8_t rgb,uint8_t dir){
     temp=brightness[rgb][0];
     for (led = 0; led < NUMLEDS-1; led++)    {
       brightness[rgb][led]=brightness[rgb][led+1];
+#if defined(ADAFRUITNEOPIXELRING)
+      ring.setPixelColor(led, brightness[0][led],brightness[1][led],brightness[2][led]);
+#endif
     }
     brightness[rgb][led]=temp;
+#if defined(ADAFRUITNEOPIXELRING)
+    ring.setPixelColor(led, brightness[0][led],brightness[1][led],brightness[2][led]);
+#endif
   }
   if(dir==2){
     temp=brightness[rgb][NUMLEDS-1];
     for (led = NUMLEDS-1; led >0; led--)    {
       brightness[rgb][led]=brightness[rgb][led-1];
+#if defined(ADAFRUITNEOPIXELRING)
+      ring.setPixelColor(led, brightness[0][led],brightness[1][led],brightness[2][led]);
+#endif
     }
     brightness[rgb][0]=temp;
+#if defined(ADAFRUITNEOPIXELRING)
+    ring.setPixelColor(0, brightness[0][led],brightness[1][led],brightness[2][led]);
+#endif
   }
 }
 
