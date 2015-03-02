@@ -32,9 +32,9 @@
 /*************************************************************************************************/
 
 /* Operation mode *///Choose only 1
-//#define MultiWii_I2C_v2 // - to use Multiwii 2.2rc LEDring functionality. (or 2.1 with alternative LEDring.ino
+#define MultiWii_I2C_v2 // - to use Multiwii 2.2rc LEDring functionality. (or 2.1 with alternative LEDring.ino
 //#define MultiWii_I2C_v1 // - to use standard Multiwii 2.0/2.1 LED functionality.
-#define Standalone              // - runs standalone using stitches to determine flashe sequences
+//#define Standalone              // - runs standalone using stitches to determine flashe sequences
 
 
 //#define DEBUG
@@ -234,7 +234,7 @@ void I2C_enhanced_mode(){
     break;
   case 's': // Motors off - MultiWii sending status info
     if (param[1]==0&&param[2]==0&&param[3]==0&&param[4]==0){ //ACRO only
-      LED_sequence(NUMLEDS-1);
+      LED_sequence(11);
     }
     else if (param[4]>0){ // GPS mode
       param[6]=constrain (param[6],0,NUMLEDS);
@@ -310,6 +310,7 @@ void I2C_enhanced_mode(){
     break;
   }
   param[0]=0;
+  SHOWLEDS();
 }
 #endif
 
@@ -394,7 +395,7 @@ void I2C_standard_mode(){
         turnover(0,2);
         turnover(1,1);
         turnover(2,2);
-        SHOWLEDS()
+        SHOWLEDS();
         delay(90);
       }
       break;
@@ -445,11 +446,23 @@ void I2C_standard_mode(){
 
 #if defined (MultiWii_I2C_v2) || defined (MultiWii_I2C_v1)
 void receiveEvent(int16_t n) {
+#if DEBUG
+  Serial.print("receiveEvent(");
+#endif
   uint8_t p=0;
   while(Wire.available()) {
     param[p++]=Wire.read();
+#if DEBUG
+    if (p == 1) {
+      Serial.print((char)param[0]);
+    } else {
+      Serial.print(param[p-1]);
+    }
+    Serial.print(", ");
+#endif
     if (p>9) p=9;
   }
+  Serial.println(")");
 }
 #endif
 
